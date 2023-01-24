@@ -11,7 +11,7 @@ export type AuthResponse = {
 
 export type AuthContextType = {
   user: User | null;
-  login: (username: string, password: string) => void;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (username: string, password: string) => void;
+  signup: (username: string, password: string) => Promise<void>;
 };

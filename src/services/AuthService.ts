@@ -3,17 +3,20 @@ import { toast } from "react-toastify";
 import { AuthResponse } from "../types";
 
 export async function login(username: string, password: string) {
-  const response = await fetch(`${API_URL}/login`, {
+  const response = await fetch(`${API_URL}/auth/signin`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ username, password }),
   });
 
+  const data: AuthResponse = await response.json();
   if (response.ok) {
-    const data: AuthResponse = await response.json();
     localStorage.setItem("quoots-token", data.token);
     return data;
   } else {
-    toast("This sucks...");
+    toast.error(data.message);
     return null;
   }
 }
@@ -23,17 +26,20 @@ export function logout() {
 }
 
 export async function signup(username: string, password: string) {
-  const response = await fetch(`${API_URL}/signup`, {
+  const response = await fetch(`${API_URL}/auth/signup`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ username, password }),
   });
 
+  const data: AuthResponse = await response.json();
   if (response.ok) {
-    const data: AuthResponse = await response.json();
     localStorage.setItem("quoots-token", data.token);
     return data;
   } else {
-    toast("This sucks...");
+    toast.error(data.message);
     return null;
   }
 }

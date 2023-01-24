@@ -1,17 +1,9 @@
 import React, { useContext, useState, createContext } from "react";
 import * as auth from "../services/AuthService";
 import { AuthContextType, User } from "../types";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
-const AuthContextInitial = {
-  user: null,
-  signup: () => {},
-  login: () => {},
-  logout: () => {},
-};
-
-const AuthContext = createContext<AuthContextType>(AuthContextInitial);
+let AuthContext: React.Context<AuthContextType>;
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -19,17 +11,13 @@ export function useAuth() {
 
 export const AuthProvider: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   async function login(username: string, password: string) {
     setLoading(true);
     const response = await auth.login(username, password);
     setCurrentUser(response?.user || null);
     setLoading(false);
-    const origin = location.state?.from?.pathname || "/";
-    navigate(origin);
   }
 
   function logout() {
@@ -51,10 +39,11 @@ export const AuthProvider: React.FC = () => {
     logout,
   };
 
+  AuthContext = createContext(value);
+
   return (
     <AuthContext.Provider value={value}>
-      {/* <{!loading && <Outlet />}> */}
-      <Outlet />
+      {!loading && <Outlet />}
     </AuthContext.Provider>
   );
 };
