@@ -3,8 +3,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Login from "../login/login";
-import Home from "../home/home";
+import Login from "../login";
+import Home from "../home";
 
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { AuthProvider } from "../contexts/AuthContext";

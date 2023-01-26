@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Layout from "../components/layout";
-import { useAuth } from "../contexts/AuthContext";
+import Layout from "./components/layout";
+import { useAuth } from "./contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 export default function Login() {

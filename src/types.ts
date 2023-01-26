@@ -19,6 +19,9 @@ export type AuthContextType = {
 
 export type QuotesContextType = {
   quotes: Quote[];
+  refetchQuotes: () => void;
+  deleteQuote: (id: number) => Promise<void>;
+  saveQuote: (text: string, tags: string[]) => Promise<void>;
 };
 
 export type Tag = {
@@ -32,4 +35,9 @@ export type Quote = {
   text: string;
   tags?: Tag[];
   user: Omit<User, "token">;
+};
+
+export type CreateQuoteResponse = {
+  message: string;
+  quote: Quote;
 };

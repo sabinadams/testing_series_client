@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { toast } from "react-toastify";
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -28,6 +29,8 @@ const handleResponse = (response: AxiosResponse) => {
 };
 
 instance.interceptors.request.use(handleRequest);
-instance.interceptors.response.use(handleResponse);
+instance.interceptors.response.use(handleResponse, (e) => {
+  toast.error(e.message);
+});
 
 export default instance;
