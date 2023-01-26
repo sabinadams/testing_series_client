@@ -1,7 +1,8 @@
 import React, { useContext, useState, createContext } from "react";
-import * as auth from "../services/AuthService";
+import * as _auth from "../services/AuthService";
 import { AuthContextType, User } from "../types";
 import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
 
 let AuthContext: React.Context<AuthContextType>;
 
@@ -9,26 +10,28 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export const AuthProvider: React.FC = () => {
+export const AuthProvider = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function login(username: string, password: string) {
     setLoading(true);
-    const response = await auth.login(username, password);
-    setCurrentUser(response?.user || null);
+    await _auth.login(username, password);
+    const user = _auth.loadUser();
+    setCurrentUser(user);
     setLoading(false);
   }
 
   function logout() {
     setCurrentUser(null);
-    auth.logout();
+    _auth.logout();
   }
 
   async function signup(username: string, password: string) {
     setLoading(true);
-    const response = await auth.signup(username, password);
-    setCurrentUser(response?.user || null);
+    await _auth.signup(username, password);
+    const user = _auth.loadUser();
+    setCurrentUser(user);
     setLoading(false);
   }
 
@@ -40,6 +43,16 @@ export const AuthProvider: React.FC = () => {
   };
 
   AuthContext = createContext(value);
+
+  useEffect(() => {
+    const user = _auth.loadUser();
+    if (user) {
+      setCurrentUser(user);
+    } else {
+      setCurrentUser(null);
+    }
+    setLoading(false);
+  }, []);
 
   return (
     <AuthContext.Provider value={value}>

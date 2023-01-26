@@ -8,6 +8,7 @@ import Home from "../home/home";
 
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { AuthProvider } from "../contexts/AuthContext";
+import { QuotesProvider } from "../contexts/QuotesContext";
 export default createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthProvider />}>
@@ -15,7 +16,9 @@ export default createBrowserRouter(
         path="/"
         element={
           <ProtectedRoute>
-            <Home />
+            <QuotesProvider>
+              <Home />
+            </QuotesProvider>
           </ProtectedRoute>
         }
       />

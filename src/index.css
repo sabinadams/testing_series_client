@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 body,
-html {
+html,
+#root {
   @apply bg-gray-200;
+  height: 100%;
+  width: 100%;
+}
+
+.text-contrast {
+  mix-blend-mode: difference;
 }

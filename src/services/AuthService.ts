@@ -1,45 +1,53 @@
-import { API_URL } from "../config/constants";
 import { toast } from "react-toastify";
 import { AuthResponse } from "../types";
+import axios from "./HttpService";
 
 export async function login(username: string, password: string) {
-  const response = await fetch(`${API_URL}/auth/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password }),
+  const { data, status } = await axios.post<AuthResponse>(`/auth/signin`, {
+    username,
+    password,
   });
 
-  const data: AuthResponse = await response.json();
-  if (response.ok) {
-    localStorage.setItem("quoots-token", data.token);
-    return data;
+  if (status === 200) {
+    localStorage.setItem(
+      "quoots-user",
+      JSON.stringify({
+        ...data.user,
+        token: data.token,
+      })
+    );
   } else {
     toast.error(data.message);
-    return null;
   }
 }
 
 export function logout() {
-  localStorage.removeItem("quoots-token");
+  localStorage.removeItem("quoots-user");
 }
 
 export async function signup(username: string, password: string) {
-  const response = await fetch(`${API_URL}/auth/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password }),
+  const { data, status } = await axios.post<AuthResponse>(`/auth/signup`, {
+    username,
+    password,
   });
 
-  const data: AuthResponse = await response.json();
-  if (response.ok) {
-    localStorage.setItem("quoots-token", data.token);
-    return data;
+  if (status === 200) {
+    localStorage.setItem(
+      "quoots-user",
+      JSON.stringify({
+        ...data.user,
+        token: data.token,
+      })
+    );
   } else {
     toast.error(data.message);
-    return null;
   }
+}
+
+export function loadUser() {
+  const user = localStorage.getItem("quoots-user");
+  if (user) {
+    return JSON.parse(user);
+  }
+  return null;
 }
